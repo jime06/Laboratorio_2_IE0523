@@ -76,5 +76,5 @@ module laboratorio2(
       //end
       
     endcase
-  end //end del always
+  end
 endmodule
