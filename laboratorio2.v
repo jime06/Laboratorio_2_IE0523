@@ -24,12 +24,19 @@ module laboratorio2(
   reg [1:0] intentos_pin;
 
   //variables de estados
-  reg [0:1] state;
-  reg [0:1] next_state;
+  reg [0:2] state;
+  reg [0:2] next_state;
   
-  always @(posedge clk or negedge reset) begin
+  //definimos los estados como parámetros
+  parameter esperando_tarjeta = 0; //default
+  parameter hay_tarjeta = 1;
+  parameter depósito = 2;
+  parameter retiro = 3;
+  parameter bloqueo = 4;
+
+  always @(posedge clk) begin
     if (rst)begin
-      state => 3'b000; //esperando tarjeta
+      next_state <= esperando_tarjeta;
     end
     else begin
       state => next_state;
