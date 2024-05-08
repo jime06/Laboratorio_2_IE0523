@@ -47,7 +47,7 @@ module laboratorio2(
     case(state)
 
       //estado inicial: esperando tarjeta
-      3'b000:
+      esperando_tarjeta:
       begin
         if(tarjeta_recibida == 1) begin
           balance_actualizado = 0;
@@ -60,17 +60,20 @@ module laboratorio2(
           pin_usuario = '0;
 
           //se pasa de estado
-          next_state = 3'b001; //pin acertado + deposito
+          next_state = hay_tarjeta; //pin acertado + deposito
         end
         else begin
           //si no, se queda esperando la tarjeta
-          next_state = 3'b000;
+          next_state = esperando_tarjeta;
           balance = '0;
         end
       end
 
-      //primer estado: pin acertado + depósito
-      //3'b001:
+      //primer estado
+      //hay_tarjeta:
+      //begin
+
+      //end
       
     endcase
   end //end del always

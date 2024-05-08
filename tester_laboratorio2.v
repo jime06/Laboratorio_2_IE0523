@@ -20,11 +20,25 @@ module tester_laboratorio2(
 
 //acá definimos el clk
 always begin
-    clk = !clk;
+   #2 clk = !clk;
 end
 
 //iniciamos las pruebas
 initial begin
-    
+    clk = 0;
+    reset = 1;
+    tarjeta_recibida = 0;
+    tipo_trans = 0;
+    monto_stb = 0;
+    pin = 15'b0;
+    digito = 0;
+    monto = 31'b0;
+
+    //se inicia el cajero
+    #1 reset = 0;
+    #1 reset = 1;
+    tarjeta_recibida = 1;
+    //se prueba el recibido de tarjeta
+
 end
 endmodule
