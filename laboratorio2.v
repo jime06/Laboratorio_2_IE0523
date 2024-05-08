@@ -63,40 +63,8 @@ module laboratorio2(
       end
 
       //primer estado: pin acertado + depósito
-      3'b001:
-      begin
-        if (tipo_de_tarjeta && tarjeta_recibida)begin
-          if(digito_stb)begin
-            pin_usuario = {pin_usuario, digito};
-            contador_pin = contador_pin + 1;
-            //esto cuenta los digitos del pin
-            //siempre que se estén ingresando dígitos este if se va a activar
-            //la maquina se quedará en el mismo estado mientras espera otro digito
-            next_state = 3'b001;
-          end
-          else begin
-            //mientras digito esté en cero, se mantiene esperando el ingreso del dígito
-            next_state = 3'b001;
-          end
-        
-          //una vez ingresado el pin, este se verifica
-          if (contador_pin == 4) begin
-            if (pin_usuario == pin)begin
-              //se resetea el pin
-              pin_usuario = '0;
-              contador_pin = 0;
-              if(tipo_trans && !reset)begin
-                //acá sumamos monto al balance
-                balance_actualizado = 1;
-              end
-          end
-
-            else begin
-              //esto es lo que pasa cuando el pin es incorrecto
-              //acá pasamos al estado pin incorrecto
-          end 
-        end
-      end
+      //3'b001:
+      
     endcase
-  end
+  end //end del always
 endmodule
