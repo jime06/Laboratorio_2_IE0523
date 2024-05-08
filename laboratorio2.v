@@ -72,9 +72,38 @@ module laboratorio2(
       //primer estado
       //hay_tarjeta:
       //begin
-
       //end
       
+      //tercer estado
+      depósito:
+      begin
+        if (monto_stb) begin
+          balance = balance + monto;
+          balance_actualizado = 1;
+          next_state = retiro;
+        end
+      end
+
+      // cuarto estado
+      retiro:
+      begin
+        if (monto_stb) begin
+          if (balance > monto) begin
+            balance = balance + -monto;
+            balance_actualizado = 1;
+            entregar_dinero = 1;
+            next_state = esperando_tarjeta
+          end
+          else begin
+            fondos_insuficientes = 1;
+            next_state = esperando_tarjeta;
+          end
+        end
+      end
+      default:
+      begin
+        next_state = esperando_tarjeta;
+      end
     endcase
   end
 endmodule
