@@ -3,11 +3,11 @@ module laboratorio2(
   input reset,
   input tarjeta_recibida,
   input tipo_de_tarjeta,
-  input [0:15] pin,
+  input [15:0] pin,
   input dígito,
   input digito_stb, //se pone en alto durante un ciclo de reloj cuando se presiona una tecla
   input tipo_trans,
-  input [0:31] monto,
+  input [31:0] monto,
   input monto_stb,
 
   output reg balance_actualizado,
@@ -18,14 +18,14 @@ module laboratorio2(
   output reg advertencia
 );
   //variables internas
-  reg [0:63] balance;
-  reg [0:2] contador_pin;//cuenta los digitos del pin ingresados al sistema
-  reg [0:15] pin_usuario; //pin que digita el usuario
+  reg [63:0] balance;
+  reg [2:0] contador_pin;//cuenta los digitos del pin ingresados al sistema
+  reg [15:0] pin_usuario; //pin que digita el usuario
   reg [1:0] intentos_pin;
 
   //variables de estados
-  reg [0:2] state;
-  reg [0:2] next_state;
+  reg [2:0] state;
+  reg [2:0] next_state;
   
   //definimos los estados como parámetros
   parameter esperando_tarjeta = 0; //default
