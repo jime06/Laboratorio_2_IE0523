@@ -2,7 +2,7 @@ module laboratorio2(
   input clk,
   input reset,
   input tarjeta_recibida,
-  input tipo_de_tarjeta,
+  input tarjeta,
   input [15:0] pin,
   input dígito,
   input digito_stb, //se pone en alto durante un ciclo de reloj cuando se presiona una tecla
@@ -15,7 +15,8 @@ module laboratorio2(
   output reg fondos_insuficientes,
   output reg pin_incorrecto,
   output reg bloqueo,
-  output reg advertencia
+  output reg advertencia,
+  output reg tipo_de_tarjeta;
 );
   //variables internas
   reg [63:0] balance;
@@ -60,7 +61,14 @@ module laboratorio2(
           contador_pin = '0;
           pin_usuario = '0;
           intentos_pin = '0;
+        // Si tarjeta es igual a 1, significa que es una tarjeta bcr, por lo que tipo_de_tarjeta = 0
+          if (tarjeta == 1) begin
+            tipo_de_tarjeta = 0;
+          end
 
+          else begin
+            tipo_de_tarjeta = 1;
+          end
           //se pasa de estado
           next_state = esperando_pin;//pin acertado + deposito
         end
@@ -72,7 +80,7 @@ module laboratorio2(
       end
 
       //primer estado
-    esperando_pin:
+      esperando_pin:
       begin
         if(digito_stb) begin
           pin_usuario = {pin_usuario, digito};
@@ -81,8 +89,8 @@ module laboratorio2(
           next_state = esperando_pin; //se vuelve a esperando_pin para esperar el siguiente dígito
         end
         else begin
-          //mientras digito_stb esté en cero se mantendrá esperando el ingreso de la tarjeta
-          next_state = esperando_tarjeta;
+          //mientras digito_stb esté en cero se mantendrá esperando el ingreso del digito
+          next_state = esperando_pin;
         end
 
         //una vez que se ingresó el pin, se verifica si es válido o no
@@ -119,6 +127,9 @@ module laboratorio2(
           //se vuelve a esperar a que se ingrese el pin
           next_state = esperando_pin;
         end
+        else begin
+          next_state = depósito
+        end
       end
 
       // cuarto estado
@@ -135,6 +146,9 @@ module laboratorio2(
             fondos_insuficientes = 1;
             next_state = esperando_tarjeta;
           end
+        end
+        else begin
+          next_state = retiro;
         end
       end
 
