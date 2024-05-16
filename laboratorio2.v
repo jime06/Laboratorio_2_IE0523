@@ -69,7 +69,6 @@ module laboratorio2(
           else begin
             tipo_de_tarjeta = 1;
           end
-
           //se pasa de estado
           next_state = esperando_pin;//pin acertado + deposito
         end
@@ -128,6 +127,9 @@ module laboratorio2(
           //se vuelve a esperar a que se ingrese el pin
           next_state = esperando_pin;
         end
+        else begin
+          next_state = depósito
+        end
       end
 
       // cuarto estado
@@ -144,6 +146,9 @@ module laboratorio2(
             fondos_insuficientes = 1;
             next_state = esperando_tarjeta;
           end
+        end
+        else begin
+          next_state = retiro;
         end
       end
 
