@@ -15,7 +15,7 @@ module laboratorio2(
   output reg fondos_insuficientes,
   output reg pin_incorrecto,
   output reg bloqueo,
-  output reg advertencia,
+  output reg advertencia
   /*output reg tipo_de_tarjeta*/;
 );
   //variables internas
@@ -129,7 +129,7 @@ module laboratorio2(
           next_state = esperando_pin;
         end
         else begin
-          next_state = depósito
+          next_state = depósito;
         end
       end
 
@@ -138,7 +138,7 @@ module laboratorio2(
       begin
         if (monto_stb) begin
           if (balance > monto) begin
-            balance = balance + -monto;
+            balance = balance - monto;
             balance_actualizado = 1;
             entregar_dinero = 1;
             next_state = esperando_tarjeta;
