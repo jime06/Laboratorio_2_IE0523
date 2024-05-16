@@ -81,8 +81,8 @@ module laboratorio2(
           next_state = esperando_pin; //se vuelve a esperando_pin para esperar el siguiente dígito
         end
         else begin
-          //mientras digito_stb esté en cero se mantendrá esperando el ingreso de la tarjeta
-          next_state = esperando_tarjeta;
+          //mientras digito_stb esté en cero se mantendrá esperando el ingreso del digito
+          next_state = esperando_pin;
         end
 
         //una vez que se ingresó el pin, se verifica si es válido o no
