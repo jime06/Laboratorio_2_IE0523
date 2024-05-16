@@ -2,7 +2,7 @@ module laboratorio2(
   input clk,
   input reset,
   input tarjeta_recibida,
-  input tarjeta,
+  input tipo_de_tarjeta,
   input [15:0] pin,
   input dígito,
   input digito_stb, //se pone en alto durante un ciclo de reloj cuando se presiona una tecla
@@ -16,7 +16,7 @@ module laboratorio2(
   output reg pin_incorrecto,
   output reg bloqueo,
   output reg advertencia,
-  output reg tipo_de_tarjeta;
+  /*output reg tipo_de_tarjeta*/;
 );
   //variables internas
   reg [63:0] balance;
@@ -61,16 +61,17 @@ module laboratorio2(
           contador_pin = '0;
           pin_usuario = '0;
           intentos_pin = '0;
-        // Si tarjeta es igual a 1, significa que es una tarjeta bcr, por lo que tipo_de_tarjeta = 0
-          if (tarjeta == 1) begin
-            tipo_de_tarjeta = 0;
+        //Cuando se ingresa una tarjeta que no es del bcr, tipo_de_tarjeta se pone en y se cobra una comisión
+          if (tipo_de_tarjeta == 1) begin
+            balance = balance - 1000;
+            next_state = esperando_pin;
+            //como en la vida real, se descuenta la comisión y se pasa a pedir el pin
           end
 
           else begin
-            tipo_de_tarjeta = 1;
-          end
-          //se pasa de estado
+          //en el caso de que la tarjeta sí es bcr, no se cobra la comision y se procede.
           next_state = esperando_pin;//pin acertado + deposito
+          end
         end
         else begin
           //si no, se queda esperando la tarjeta
