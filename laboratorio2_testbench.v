@@ -41,5 +41,9 @@ tester_laboratorio2 test(
     .advertencia(advertencia)
 );
 
-//
+//se monitorea la actividad de las pruebas
+initial begin
+    $dumpfile(tb.vcd);
+    $dumpvars;
+end
 endmodule
