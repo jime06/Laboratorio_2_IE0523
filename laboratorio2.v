@@ -61,7 +61,7 @@ module laboratorio2(
           contador_pin = '0;
           pin_usuario = '0;
           intentos_pin = '0;
-        //Cuando se ingresa una tarjeta que no es del bcr, tipo_de_tarjeta se pone en y se cobra una comisión
+        //Cuando se ingresa una tarjeta que no es del bcr, tipo_de_tarjeta se pone en 1 y se cobra una comisión
           if (tipo_de_tarjeta == 1) begin
             balance = balance - 1000;
             next_state = esperando_pin;
