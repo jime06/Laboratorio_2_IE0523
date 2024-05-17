@@ -143,9 +143,8 @@ module laboratorio2(
           //se vuelve a esperar a que se ingrese el pin
           next_state = esperando_tarjeta;
         end
-        /*else begin
-          next_state = esperando_pin;
-        end*/
+        else
+          next_state = deposito;
       end
 
       // cuarto estado
