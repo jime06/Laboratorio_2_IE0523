@@ -1,14 +1,14 @@
 module tester_laboratorio2(
-    output clk,
-    output reset,
-    output tarjeta_recibida,
-    output tipo_de_tarjeta,
-    input [0:15] pin,
-    output digito,
-    output digito_stb,
-    output tipo_trans,
-    output [0:31] monto,
-    output monto_stb,
+    output reg clk,
+    output reg reset,
+    output reg tarjeta_recibida,
+    output reg tipo_de_tarjeta,
+    output reg [15:0] pin,
+    output reg [4:0]digito,
+    output reg digito_stb,
+    output reg tipo_trans,
+    output reg [31:0] monto,
+    output reg monto_stb,
 
     input balance_actualizado,
     input entregar_dinero,
@@ -38,11 +38,44 @@ initial begin
     #1 reset = 0;
     #1 reset = 1;
     tarjeta_recibida = 1;
-    pin = 'h2023;
+    pin = 'h3443;
+
+    //primer caso: pin acertado + depósito
+    //prueba 1: se detecta que la tarjeta sea del bcr
+    tipo_de_tarjeta = 1;
+
+    //prueba 2: se ingresan los digitos del pin
+    //primer dígito
+    #3 digito = 3;
+    #1 digito_stb = 1;
+    #1 digito_stb = 0;
+    digito = 0;
+
+    //segundo dígito
+    #3 digito = 4;
+    #1 digito_stb = 1;
+    #1 digito_stb = 0;
+    digito = 0;
+
+    //tercer dígito
+    #3 digito = 4;
+    #1 digito_stb = 1;
+    #1 digito_stb = 0;
+    digito = 0;
+
+    //cuarto dígito 
+    #3 digito = 3;
+    #1 digito_stb = 1;
+    #1 digito_stb = 0;
+    digito = 0;
+
+    //prueba 3: se verifica el pin
+    
+
 
     //se prueba el primer pin
     //se ingresa el primer dígito
-    #3 digito = 1;
+    /*#3 digito = 1;
     #1 digito_stb = 1;
     #1 digito_stb = 0;
     digito = 0;
@@ -148,7 +181,7 @@ initial begin
     //se ingresa el monto a depositar
     #3 monto = 100000;
     #1 monto_stb = 1;
-    #monto_stb = 0;
+    monto_stb = 0;
     monto = 0;
 
     //se prueba el retiro
@@ -219,10 +252,10 @@ initial begin
     //se autentica el usuario y se procede con la transacción
     #3 monto = 9100;
     #1 monto_stb = 1;
-    31 monto_stb = 0;
+    #1 monto_stb = 0;
     monto = 0;
 
-    #10;
+    #10;*/
     $finish;
 end
 endmodule

@@ -3,16 +3,26 @@
 
 module laboratorio2_testbench;
 //wires del testbench
+wire clk, reset;
+wire tarjeta_recibida, tipo_de_tarjeta;
+wire [15:0] pin;
+wire [4:0] digito;
+wire digito_stb;
+wire [31:0] monto;
+wire tipo_trans, monto_stb;
+wire balance_actualizado, entregar_dinero,fondos_insuficientes;
+wire pin_incorrecto, bloqueo, advertencia;
+
 laboratorio2 DUT(
     .clk(clk),
-    .reset(reset)
+    .reset(reset),
     .tarjeta_recibida(tarjeta_recibida),
     .tipo_de_tarjeta(tipo_de_tarjeta),
-    .pin(pin[0:15]),
-    .digito(digito),
+    .pin(pin[15:0]),
+    .digito(digito[4:0]),
     .digito_stb(digito_stb),
     .tipo_trans(tipo_trans),
-    .monto(monto),
+    .monto(monto[31:0]),
     .monto_stb(monto_stb),
     .balance_actualizado(balance_actualizado),
     .entregar_dinero(entregar_dinero),
@@ -24,14 +34,14 @@ laboratorio2 DUT(
 
 tester_laboratorio2 test(
     .clk(clk),
-    .reset(reset)
+    .reset(reset),
     .tarjeta_recibida(tarjeta_recibida),
     .tipo_de_tarjeta(tipo_de_tarjeta),
-    .pin(pin[0:15]),
-    .digito(digito),
+    .pin(pin[15:0]),
+    .digito(digito[4:0]),
     .digito_stb(digito_stb),
     .tipo_trans(tipo_trans),
-    .monto(monto),
+    .monto(monto[31:0]),
     .monto_stb(monto_stb),
     .balance_actualizado(balance_actualizado),
     .entregar_dinero(entregar_dinero),
@@ -43,7 +53,7 @@ tester_laboratorio2 test(
 
 //se monitorea la actividad de las pruebas
 initial begin
-    $dumpfile(tb.vcd);
+    $dumpfile("tb.vcd");
     $dumpvars;
 end
 endmodule

@@ -4,7 +4,7 @@ module laboratorio2(
   input tarjeta_recibida,
   input tipo_de_tarjeta,
   input [15:0] pin,
-  input dígito,
+  input [4:0] digito,
   input digito_stb, //se pone en alto durante un ciclo de reloj cuando se presiona una tecla
   input tipo_trans,
   input [31:0] monto,
@@ -16,7 +16,7 @@ module laboratorio2(
   output reg pin_incorrecto,
   output reg bloqueo,
   output reg advertencia
-  /*output reg tipo_de_tarjeta*/;
+  /*output reg tipo_de_tarjeta*/
 );
   //variables internas
   reg [63:0] balance;
@@ -32,16 +32,16 @@ module laboratorio2(
   parameter esperando_tarjeta = 0; //default
   parameter esperando_pin = 1;
   parameter usuario_identificado = 2;
-  parameter depósito = 3;
+  parameter deposito = 3;
   parameter retiro = 4;
   parameter bloqueado = 5;
 
   always @(posedge clk) begin
-    if (rst)begin
+    if (reset)begin
       next_state <= esperando_tarjeta;
     end
     else begin
-      state => next_state;
+      next_state = state;
     end
   end
 
@@ -58,9 +58,9 @@ module laboratorio2(
           pin_incorrecto = 0;
           bloqueo = 0;
           advertencia = 0;
-          contador_pin = '0;
-          pin_usuario = '0;
-          intentos_pin = '0;
+          contador_pin = 0;
+          pin_usuario = 0;
+          intentos_pin = 0;
         //Cuando se ingresa una tarjeta que no es del bcr, tipo_de_tarjeta se pone en y se cobra una comisión
           if (tipo_de_tarjeta == 1) begin
             balance = balance - 1000;
@@ -76,7 +76,7 @@ module laboratorio2(
         else begin
           //si no, se queda esperando la tarjeta
           next_state = esperando_tarjeta;
-          balance = '0;
+          balance = 0;
         end
       end
 
@@ -96,15 +96,29 @@ module laboratorio2(
 
         //una vez que se ingresó el pin, se verifica si es válido o no
         if(contador_pin == 4) begin
-          //el pin ingresado es el correcto y se identifica el usuario
-          pin_usuario = '0;
-          contador_pin = 0; //se reinicia el contador
-          next_state = usuario_identificado;
+          if(pin_usuario == pin)begin
+            //el pin ingresado es el correcto y se identifica el usuario
+            pin_usuario = 0;
+            contador_pin = 0; //se reinicia el contador
+            next_state = usuario_identificado;
+          end
+          else begin
+            contador_pin = 0;
+            intentos_pin = intentos_pin + 1;
+            pin_incorrecto = 1; //se ingresa el pin incorrecto una vez
+
+            if(intentos_pin == 2)begin
+              advertencia = 1;
+              next_state = esperando_pin;
+            end
+            else if(intentos_pin == 3) 
+              next_state = bloqueado;
+            else
+              next_state = esperando_pin;
+          end
         end
         else begin
-          contador_pin = 0;
-          intentos_pin = intentos_pin + 1;
-          pin_incorrecto = 1; //se ingresa el pin incorrecto una vez
+          next_state = esperando_pin; //se ingresa el pin incorrecto una vez
         end
       end
 
@@ -119,7 +133,7 @@ module laboratorio2(
       end
 
       //tercer estado
-      depósito:
+      deposito:
       begin
         if (monto_stb) begin
           //se le suma el monto depositado al balance de la cuenta
@@ -129,7 +143,7 @@ module laboratorio2(
           next_state = esperando_pin;
         end
         else begin
-          next_state = depósito;
+          next_state = deposito;
         end
       end
 
