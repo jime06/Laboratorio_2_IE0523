@@ -137,8 +137,80 @@ initial begin
 	// Depósito exitoso	
 
 	//Finalmente, se resetea el cajero
+	#5 TIPO_TRANS = 1; //se pone tipo_trans = 1 para pasar al retiro
 	#5 RESET = 0;
 	#5 RESET = 1;
+
+	//Caso 2: pin acertado + retiro:
+	//es exactamente igual al caso 1, solo que en vez de deposito es retiro.
+	//primero se prueba con fondos insuficientes
+	// 	Ingreso del pin
+	// 	Primer dígito
+	#3 DIGITO		=	2;
+	#1 DIGITO_STB		=	1;
+	#1 DIGITO_STB		=	0;
+	   DIGITO		=	0;
+
+	// 	Segundo dígito
+	#3 DIGITO		=	0;
+	#1 DIGITO_STB		=	1;
+	#1 DIGITO_STB		=	0;
+	   DIGITO		=	0;
+
+	// 	Tercer dígito
+	#3 DIGITO		=	2;
+	#1 DIGITO_STB		=	1;
+	#1 DIGITO_STB		=	0;
+	   DIGITO		=	0;
+
+	// 	Cuarto dígito
+	#3 DIGITO		=	3;
+	#1 DIGITO_STB		=	1;
+	#1 DIGITO_STB		=	0;
+	   DIGITO		=	0;
+	//se autentica el usuario
+	//retiro con fondos insuficientes
+	#3 MONTO = 10000000000;
+	#1 MONTO_STB = 1;
+	#1 MONTO_STB = 0;
+		MONTO = 0;
+
+	//se vuelve a ingresar el pin y se realiza
+	#5 TIPO_TRANS = 1;
+	#5 RESET = 0;
+	#5 RESET = 1;
+
+	//se ingresa el pin
+	// 	Primer dígito
+	#3 DIGITO		=	2;
+	#1 DIGITO_STB		=	1;
+	#1 DIGITO_STB		=	0;
+	   DIGITO		=	0;
+
+	// 	Segundo dígito
+	#3 DIGITO		=	0;
+	#1 DIGITO_STB		=	1;
+	#1 DIGITO_STB		=	0;
+	   DIGITO		=	0;
+
+	// 	Tercer dígito
+	#3 DIGITO		=	2;
+	#1 DIGITO_STB		=	1;
+	#1 DIGITO_STB		=	0;
+	   DIGITO		=	0;
+
+	// 	Cuarto dígito
+	#3 DIGITO		=	3;
+	#1 DIGITO_STB		=	1;
+	#1 DIGITO_STB		=	0;
+	   DIGITO		=	0;
+	// se autentica el usuario
+	//se procede a realizar el retiro con suficientes fondos
+	#3 MONTO = 9100;
+	#1 MONTO_STB = 1;
+	#1 MONTO_STB = 0;
+		MONTO = 0;
+
 	// A.2:
 	/*// 	Ingreso del segundo pin
 	// A.2.1:
