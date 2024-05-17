@@ -138,13 +138,7 @@ always @(*) begin
 			end
 		end
 
-		// Estado 1: Esperando PIN, se encarga de esperar a que se
-		// ingrese el PIN dígito a dígito, después verifica si la
-		// entrada del usuario corresponde con el dato dado por la
-		// tarjeta, si es correcto pasa a autenticar el usuario, si
-		// falla, aumenta el número de intentos y penaliza según se
-		// requiera
-
+		// Estado 1: Esperando PIN
 		6'b000010:
 		begin
 
@@ -156,14 +150,7 @@ always @(*) begin
 				// Se concatenan los últimos dígitos del PIN
 				PIN_usuario = {PIN_usuario, DIGITO}; 
 				Contador_PIN = Contador_PIN + 1; // Contador_PIN++
-				// Una vez ingresado el pin, se asigna el
-				// estado actual a volver a ingresar el pin,
-				// así, si se ya se han introducido
-				// suficientes dígitos, se verificará la
-				// entrada, y si no, los if restantes no se
-				// activarán y de volverá a esperar el
-				// siguiente dígito
-				prox_estado = 6'b000010;
+				prox_estado = 6'b000010; //sigue esperando el pin
 			end else begin
 				// Mientras DIGITO_STB esté en cero, se
 				// mantiene esperando el ingreso
@@ -187,13 +174,8 @@ always @(*) begin
 					Contador_PIN = 0; // Reinicia el contador
 					Intentos_PIN = Intentos_PIN + 1;
 					PIN_INCORRECTO = 1;
-					// No es necesario reiniciar el pin
-					// porque el contador de dígitos
-					// ingresados vuelve a cero, así que
-					// necesariamente se necesitan 4 bits
-					// nuevos para volver a comprobar.
-					// Ahora, por tener de redundancia 
-					// se puede agregar también
+					//cuenta los intentos en caso de que haya más de uno,
+					//cuando se llega a 2 se despliega la primera advertencia
 					if (Intentos_PIN < 2) begin
 						prox_estado = 6'b000010;
 					end
@@ -238,24 +220,15 @@ always @(*) begin
 		6'b010000:
 		begin
 			BALANCE_ACTUALIZADO = 0;
-			// Espera a que se digite el monto para realizar la
-			// transacción
 			if (MONTO_STB) begin
 				if (BALANCE > MONTO) begin
-					// Si es posible retirar la cantidad
-					// solicitada, se procede con la
-					// transacción
+					//esto sucede cuando el balance es mayor al monto a retirar
 					BALANCE = BALANCE + -MONTO;
 					BALANCE_ACTUALIZADO = 1;
 					ENTREGAR_DINERO = 1;
-					// Al final, se vuelve a esperar que se
-					// ingrese el pin
 					prox_estado = 6'b000001;
 				end else begin
-					// Si no hay suficientes fondos en la
-					// cuenta, se indica que no los hay
-					// y se vuelve a esperar el ingreso
-					// del pin
+					//si no hay suficientes fondos se despliega la señal de fondos_insuficientes
 					FONDOS_INSUFICIENTES = 1;
 					prox_estado = 6'b000001;
 				end
@@ -270,8 +243,6 @@ always @(*) begin
 			if (MONTO_STB) begin
 				BALANCE = BALANCE + MONTO;
 				BALANCE_ACTUALIZADO = 1;
-				// Al final, se vuelve a esperar que se
-				// ingrese el pin
 				prox_estado = 6'b000001;
 			end
 		end
