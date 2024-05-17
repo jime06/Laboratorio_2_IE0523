@@ -20,7 +20,7 @@ module laboratorio2(
 );
   //variables internas
   reg [63:0] balance;
-  reg [4:0] contador_pin;//cuenta los digitos del pin ingresados al sistema
+  reg [2:0] contador_pin;//cuenta los digitos del pin ingresados al sistema
   reg [15:0] pin_usuario; //pin que digita el usuario
   reg [1:0] intentos_pin;
 
@@ -85,7 +85,7 @@ module laboratorio2(
       esperando_pin:
       begin
         if(digito_stb) begin
-          pin_usuario = {pin_usuario, digito};
+          pin_usuario = {pin_usuario, digito}; //acá está mi problema
           contador_pin = contador_pin + 1;
 
           next_state = esperando_pin; //se vuelve a esperando_pin para esperar el siguiente dígito

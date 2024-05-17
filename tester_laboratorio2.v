@@ -41,13 +41,14 @@ initial begin
     #1 reset = 0;
     tarjeta_recibida = 1;
     tipo_de_tarjeta = 0;
-    pin = 'h3443;
+    pin = 'h3434;
 
     //primer caso: pin acertado + depósito
     //prueba 1: se detecta que la tarjeta sea del bcr
     //tipo_de_tarjeta = 0;
 
     //prueba 2: se ingresan los digitos del pin
+    #2 digito_stb = 0;
     //primer dígito
     #3 digito = 3;
     #2 digito_stb = 1;
@@ -61,13 +62,13 @@ initial begin
     digito = 0;
 
     //tercer dígito
-    #3 digito = 4;
+    #3 digito = 3;
     #2 digito_stb = 1;
     #2 digito_stb = 0;
     digito = 0;
 
     //cuarto dígito 
-    #3 digito = 3;
+    #3 digito = 4;
     #2 digito_stb = 1;
     #2 digito_stb = 0;
     digito = 0;
