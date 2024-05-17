@@ -41,7 +41,7 @@ module laboratorio2(
       next_state <= esperando_tarjeta;
     end
     else begin
-      next_state <= state;
+      state <= next_state;
     end
   end
 
@@ -60,18 +60,18 @@ module laboratorio2(
           end
 
           else begin
-          //en el caso de que la tarjeta sí es bcr, no se cobra la comision y se procede.
-          balance_actualizado = 0;
-          entregar_dinero = 0;
-          fondos_insuficientes = 0;
-          pin_incorrecto = 0;
-          bloqueo = 0;
-          advertencia = 0;
-          contador_pin = 0;
-          pin_usuario = 0;
-          intentos_pin = 0;
-          //balance = 1000000;
-          next_state = esperando_pin;//pin acertado + deposito
+            //en el caso de que la tarjeta sí es bcr, no se cobra la comision y se procede.
+            balance_actualizado = 0;
+            entregar_dinero = 0;
+            fondos_insuficientes = 0;
+            pin_incorrecto = 0;
+            bloqueo = 0;
+            advertencia = 0;
+            contador_pin = 0;
+            pin_usuario = 0;
+            intentos_pin = 0;
+            //balance = 1000000;
+            next_state = esperando_pin;//pin acertado + deposito
           end
         end
         else begin
@@ -141,7 +141,7 @@ module laboratorio2(
           balance = balance + monto;
           balance_actualizado = 1;
           //se vuelve a esperar a que se ingrese el pin
-          next_state = esperando_pin;
+          next_state = esperando_tarjeta;
         end
         /*else begin
           next_state = esperando_pin;
@@ -153,7 +153,7 @@ module laboratorio2(
       begin
         if (monto_stb) begin
           if (balance > monto) begin
-            balance = balance - monto;
+            balance = balance + -monto;
             balance_actualizado = 1;
             entregar_dinero = 1;
             next_state = esperando_tarjeta;

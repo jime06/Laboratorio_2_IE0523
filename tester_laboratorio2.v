@@ -33,18 +33,19 @@ initial begin
     tipo_trans = 0;
     monto_stb = 0;
     pin = 15'b0;
-    digito = 0;
+    digito = 4'b0;
     monto = 31'b0;
 
     //se inicia el cajero
-    #1 reset = 0;
     #1 reset = 1;
+    #1 reset = 0;
     tarjeta_recibida = 1;
+    tipo_de_tarjeta = 0;
     pin = 'h3443;
 
     //primer caso: pin acertado + depósito
     //prueba 1: se detecta que la tarjeta sea del bcr
-    tipo_de_tarjeta = 0;
+    //tipo_de_tarjeta = 0;
 
     //prueba 2: se ingresan los digitos del pin
     //primer dígito
