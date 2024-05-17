@@ -20,7 +20,7 @@ module laboratorio2(
 );
   //variables internas
   reg [63:0] balance;
-  reg [2:0] contador_pin;//cuenta los digitos del pin ingresados al sistema
+  reg [4:0] contador_pin;//cuenta los digitos del pin ingresados al sistema
   reg [15:0] pin_usuario; //pin que digita el usuario
   reg [1:0] intentos_pin;
 
@@ -38,10 +38,10 @@ module laboratorio2(
 
   always @(posedge clk) begin
     if (!reset)begin
-      next_state <= esperando_tarjeta;
+      state <= next_state;
     end
     else begin
-      state <= next_state;
+      state <= esperando_tarjeta;
     end
   end
 

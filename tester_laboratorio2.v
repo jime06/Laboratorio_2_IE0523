@@ -28,7 +28,7 @@ end
 //iniciamos las pruebas
 initial begin
     clk = 0;
-    reset = 1;
+    reset = 0;
     tarjeta_recibida = 0;
     tipo_trans = 0;
     monto_stb = 0;
@@ -73,13 +73,13 @@ initial begin
     digito = 0;
 
     //prueba 3: se hace un depósito
-    tipo_trans = 0;
+    //tipo_trans = 0;
 
     //se ingresa el monto a depositar
-    #3 monto = 100;
-    #2 monto_stb = 1;
-    #2 monto_stb =0;
-    monto = 0;
+    /*#3 monto = 100;
+    #1 monto_stb = 1;
+    #1 monto_stb =0;
+    monto = 0;*/
     #10;
 
     //se prueba el primer pin
