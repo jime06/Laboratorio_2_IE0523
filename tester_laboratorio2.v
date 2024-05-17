@@ -50,26 +50,26 @@ initial begin
     //prueba 2: se ingresan los digitos del pin
     //primer dígito
     #3 digito = 3;
-    #1 digito_stb = 1;
-    #1 digito_stb = 0;
+    #2 digito_stb = 1;
+    #2 digito_stb = 0;
     digito = 0;
 
     //segundo dígito
     #3 digito = 4;
-    #1 digito_stb = 1;
-    #1 digito_stb = 0;
+    #2 digito_stb = 1;
+    #2 digito_stb = 0;
     digito = 0;
 
     //tercer dígito
     #3 digito = 4;
-    #1 digito_stb = 1;
-    #1 digito_stb = 0;
+    #2 digito_stb = 1;
+    #2 digito_stb = 0;
     digito = 0;
 
     //cuarto dígito 
     #3 digito = 3;
-    #1 digito_stb = 1;
-    #1 digito_stb = 0;
+    #2 digito_stb = 1;
+    #2 digito_stb = 0;
     digito = 0;
 
     //prueba 3: se hace un depósito
@@ -77,8 +77,8 @@ initial begin
 
     //se ingresa el monto a depositar
     #3 monto = 100;
-    #1 monto_stb = 1;
-    #1 monto_stb =0;
+    #2 monto_stb = 1;
+    #2 monto_stb =0;
     monto = 0;
     #10;
 
