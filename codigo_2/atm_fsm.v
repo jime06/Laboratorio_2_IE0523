@@ -32,7 +32,7 @@ input [15:0] PIN;
 input [3:0] DIGITO;
 input [31:0] MONTO;
 
-output	// Todas las salidas son binarias
+output	reg // Todas las salidas son binarias
 	BALANCE_ACTUALIZADO,
 	ENTREGAR_DINERO,
 	FONDOS_INSUFICIENTES,
@@ -53,14 +53,7 @@ wire [15:0] PIN;	// Pin correcto dado por la tarjeta
 wire [3:0] DIGITO;	// La entrada de dígito es volátil
 wire [31:0] MONTO;	// Cantidad a operar en la transacción
 
-// Declaración de roles para salidas
-reg
-	BALANCE_ACTUALIZADO,
-	ENTREGAR_DINERO,
-	FONDOS_INSUFICIENTES,
-	PIN_INCORRECTO,
-	ADVERTENCIA,
-	BLOQUEO;
+
 
 
 // Declaración de variables internas
@@ -81,10 +74,14 @@ always @(posedge CLK) begin
 	// 6'b000001
 	if (~RESET) begin
 		estado_actual	<=	6'b000001;
+		BALANCE_ACTUALIZADO <= 0;
+
 	end else begin
 		estado_actual  	<=	prox_estado;
 	end
 end
+
+
 
 // Lógica combinacional que se encarga
 // de la transición de estados
@@ -109,23 +106,23 @@ always @(*) begin
 				PIN_INCORRECTO		=	0;
 				ADVERTENCIA		=	0;
 				BLOQUEO			=	0;
-				PIN_usuario		=	'0;
-				Contador_PIN		=	'0;
-				Intentos_PIN		=	'0;
+				PIN_usuario		=	0;
+				Contador_PIN		=	3'b0;
+				Intentos_PIN		=	2'b00;
 				// Finalmente, se pasa al estado
 				prox_estado	=	6'b000010;
 
 			end else if (TARJETA_RECIBIDA == 1 && TIPO_DE_TARJETA == 1)begin
 				// Se recibe una tarjeta de otro banco
-				BALANCE_ACTUALIZADO	=	0;
+				//BALANCE_ACTUALIZADO	=	0;
 				ENTREGAR_DINERO		=	0;
 				FONDOS_INSUFICIENTES	=	0;
 				PIN_INCORRECTO		=	0;
 				ADVERTENCIA		=	0;
 				BLOQUEO			=	0;
-				PIN_usuario		=	'0;
-				Contador_PIN		=	'0;
-				Intentos_PIN		=	'0;
+				PIN_usuario		=	0;
+				Contador_PIN		=  3'b0;
+				Intentos_PIN		=	2'b00;
 				//se cobra la comisión
 				BALANCE = BALANCE - 2;
 				BALANCE_ACTUALIZADO = 1;
@@ -136,7 +133,8 @@ always @(*) begin
 			end else begin
 				//no hay tarjeta y se queda esperando que se ingrese una
 				prox_estado	=	6'b000001;
-				BALANCE		<=	'0;
+				BALANCE		=	0;
+				BALANCE_ACTUALIZADO = 0;
 			end
 		end
 
@@ -146,9 +144,14 @@ always @(*) begin
 		// tarjeta, si es correcto pasa a autenticar el usuario, si
 		// falla, aumenta el número de intentos y penaliza según se
 		// requiera
+
 		6'b000010:
 		begin
+
 			// Se empieza por ingresar el PIN dígito a dígito
+			PIN_INCORRECTO = 0;
+			ADVERTENCIA = 0;
+			BALANCE_ACTUALIZADO = 0;
 			if (DIGITO_STB) begin
 				// Se concatenan los últimos dígitos del PIN
 				PIN_usuario = {PIN_usuario, DIGITO}; 
@@ -164,7 +167,10 @@ always @(*) begin
 			end else begin
 				// Mientras DIGITO_STB esté en cero, se
 				// mantiene esperando el ingreso
-				prox_estado = 6'b000010;
+				
+				if (Intentos_PIN == 3) begin
+					prox_estado = 6'b000100;
+				end else prox_estado = 6'b000010;
 			end
 			
 			// Se verifica si la cantidad de dígitos ingresados es
@@ -174,7 +180,7 @@ always @(*) begin
 				// válido o no
 				if (PIN_usuario == PIN) begin
 					// Se borra el pin ingresado
-					PIN_usuario = '0;
+					PIN_usuario = 0;
 					Contador_PIN = 0; // Reinicia el contador
 					prox_estado = 6'b001000;
 				end else begin
@@ -188,21 +194,21 @@ always @(*) begin
 					// nuevos para volver a comprobar.
 					// Ahora, por tener de redundancia 
 					// se puede agregar también
+					if (Intentos_PIN < 2) begin
+						prox_estado = 6'b000010;
+					end
+
 					if (Intentos_PIN == 2) begin
 						ADVERTENCIA = 1;
 						prox_estado = 6'b000010;
 					end else if (Intentos_PIN == 3) begin
 						prox_estado = 6'b000100;
-					end else begin
-						// Sucede cuando sólo hay un
-						// intento
-						prox_estado = 6'b000010;
-					end
+					end 
 				end
 			end else begin
 				// Si hay menos de 4 dígitos ingresados, se
 				// mantiene esperando los demás
-				prox_estado = 6'b000010;
+				prox_estado = prox_estado;
 			end
 		end
 		// Estado 2: Bloqueado
@@ -215,6 +221,7 @@ always @(*) begin
 		// Estado 3: Usuario identificado
 		6'b001000:
 		begin
+			BALANCE_ACTUALIZADO = 0;
 			// Con el usuario identificado, se pasa a esperar qué
 			// tipo de transacción se desea y se pasa a ella
 			if (TIPO_TRANS) begin
@@ -230,7 +237,7 @@ always @(*) begin
 		// monto ingresado es menor al balance de la cuenta
 		6'b010000:
 		begin
-
+			BALANCE_ACTUALIZADO = 0;
 			// Espera a que se digite el monto para realizar la
 			// transacción
 			if (MONTO_STB) begin
@@ -243,7 +250,7 @@ always @(*) begin
 					ENTREGAR_DINERO = 1;
 					// Al final, se vuelve a esperar que se
 					// ingrese el pin
-					prox_estado = 6'b0000001;
+					prox_estado = 6'b000001;
 				end else begin
 					// Si no hay suficientes fondos en la
 					// cuenta, se indica que no los hay
@@ -259,6 +266,7 @@ always @(*) begin
 		begin
 			// Espera a que se digite el monto para realizar la
 			// transacción
+			BALANCE_ACTUALIZADO = 0;
 			if (MONTO_STB) begin
 				BALANCE = BALANCE + MONTO;
 				BALANCE_ACTUALIZADO = 1;
