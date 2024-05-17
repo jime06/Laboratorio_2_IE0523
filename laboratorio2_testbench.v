@@ -54,6 +54,7 @@ tester_laboratorio2 test(
 //se monitorea la actividad de las pruebas
 initial begin
     $dumpfile("tb.vcd");
-    $dumpvars;
+    $dumpvars(-1);
+    $monitor($time, "clk = %b, reset = %b, tarjeta_recibida = %b, tipo_de_tarjeta = %b, pin = %b, digito = %b, digito_stb = %b, tipo_trans = %b, monto = %b, monto_stb = %b, balance_actualizado = %b, entregar_dinero = %b, fondos_insuficientes = %b, pin_incorrecto = %b, advertencia = %b, bloqueo = %b", clk, reset, tarjeta_recibida, tipo_de_tarjeta, pin, digito, digito_stb, tipo_trans, monto, monto_stb, balance_actualizado, entregar_dinero, fondos_insuficientes,pin_incorrecto, advertencia, bloqueo);
 end
 endmodule

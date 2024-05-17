@@ -18,9 +18,11 @@ module tester_laboratorio2(
     input advertencia
 );
 
+parameter h_freq = 1;
+//definición de media frecuencia en unidades de tiempo
 //acá definimos el clk
 always begin
-   #2 clk = !clk;
+   #h_freq clk = !clk;
 end
 
 //iniciamos las pruebas
@@ -42,7 +44,7 @@ initial begin
 
     //primer caso: pin acertado + depósito
     //prueba 1: se detecta que la tarjeta sea del bcr
-    tipo_de_tarjeta = 1;
+    tipo_de_tarjeta = 0;
 
     //prueba 2: se ingresan los digitos del pin
     //primer dígito
@@ -69,9 +71,15 @@ initial begin
     #1 digito_stb = 0;
     digito = 0;
 
-    //prueba 3: se verifica el pin
-    
+    //prueba 3: se hace un depósito
+    tipo_trans = 0;
 
+    //se ingresa el monto a depositar
+    #3 monto = 100;
+    #1 monto_stb = 1;
+    #1 monto_stb =0;
+    monto = 0;
+    #10;
 
     //se prueba el primer pin
     //se ingresa el primer dígito

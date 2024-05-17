@@ -25,8 +25,8 @@ module laboratorio2(
   reg [1:0] intentos_pin;
 
   //variables de estados
-  reg [2:0] state;
-  reg [2:0] next_state;
+  reg [5:0] state;
+  reg [5:0] next_state;
   
   //definimos los estados como parámetros
   parameter esperando_tarjeta = 0; //default
@@ -37,11 +37,11 @@ module laboratorio2(
   parameter bloqueado = 5;
 
   always @(posedge clk) begin
-    if (reset)begin
+    if (!reset)begin
       next_state <= esperando_tarjeta;
     end
     else begin
-      next_state = state;
+      next_state <= state;
     end
   end
 
@@ -52,38 +52,32 @@ module laboratorio2(
       esperando_tarjeta:
       begin
         if(tarjeta_recibida == 1) begin
+        //Cuando se ingresa una tarjeta que no es del bcr, tipo_de_tarjeta se pone en y se cobra una comisión
+          if (tipo_de_tarjeta == 1) begin
+            balance = balance - 1000;
+            next_state = esperando_tarjeta;
+            //como en la vida real, se descuenta la comisión y se pasa a pedir el pin
+          end
+
+          else begin
+          //en el caso de que la tarjeta sí es bcr, no se cobra la comision y se procede.
           balance_actualizado = 0;
           entregar_dinero = 0;
           fondos_insuficientes = 0;
           pin_incorrecto = 0;
           bloqueo = 0;
           advertencia = 0;
-<<<<<<< HEAD
           contador_pin = 0;
           pin_usuario = 0;
           intentos_pin = 0;
-        //Cuando se ingresa una tarjeta que no es del bcr, tipo_de_tarjeta se pone en y se cobra una comisión
-=======
-          contador_pin = '0;
-          pin_usuario = '0;
-          intentos_pin = '0;
-        //Cuando se ingresa una tarjeta que no es del bcr, tipo_de_tarjeta se pone en 1 y se cobra una comisión
->>>>>>> 5d546938e596a1a4a0ec680282f3aa7c43c106f2
-          if (tipo_de_tarjeta == 1) begin
-            balance = balance - 1000;
-            next_state = esperando_pin;
-            //como en la vida real, se descuenta la comisión y se pasa a pedir el pin
-          end
-
-          else begin
-          //en el caso de que la tarjeta sí es bcr, no se cobra la comision y se procede.
+          //balance = 1000000;
           next_state = esperando_pin;//pin acertado + deposito
           end
         end
         else begin
           //si no, se queda esperando la tarjeta
           next_state = esperando_tarjeta;
-          balance = 0;
+          balance <= 0;
         end
       end
 
@@ -149,9 +143,9 @@ module laboratorio2(
           //se vuelve a esperar a que se ingrese el pin
           next_state = esperando_pin;
         end
-        else begin
-          next_state = deposito;
-        end
+        /*else begin
+          next_state = esperando_pin;
+        end*/
       end
 
       // cuarto estado
@@ -169,9 +163,9 @@ module laboratorio2(
             next_state = esperando_tarjeta;
           end
         end
-        else begin
+        /*else begin
           next_state = retiro;
-        end
+        end*/
       end
 
       //quinto estado
